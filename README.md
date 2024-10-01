@@ -136,3 +136,122 @@ function Modal() {
 
 export default Modal;
 ```
+
+## Close Modal When Users Press The “ESC” Key
+
+**Keydown Event Handler:**
+
+- The `handleKeyDown` function **checks** if the pressed key is "Escape". If it is, it calls the `closeModal` function to close the modal.
+
+**Effect Hook for Event Listener:**
+
+- The `useEffect` hook is used to **add or remove** the keydown event listener **based** on the modal's open state (`isModalOpen`).
+
+- When the **modal is opened** (`isModalOpen` is `true`), the event listener is **added** to the `window` object to listen for keydown events.
+
+- When the **modal is closed** (`isModalOpen` is false), the event listener is **removed**.
+
+- The cleanup function **ensures** that the event listener is removed if the component unmounts or if the modal state changes.
+
+```jsx
+import { useEffect } from "react";
+
+// Function to handle keydown event
+const handleKeyDown = (e) => {
+  if (e.key === "Escape") {
+    // Check if the pressed key is "Escape"
+    closeModal(); // Close the modal
+  }
+};
+
+// Effect to add/remove the keydown event listener
+useEffect(() => {
+  if (isModalOpen) {
+    window.addEventListener("keydown", handleKeyDown); // Add listener when modal is open
+  } else {
+    window.removeEventListener("keydown", handleKeyDown); // Remove listener when modal is closed
+  }
+
+  // Clean up the event listener on component unmount
+  return () => {
+    window.removeEventListener("keydown", handleKeyDown);
+  };
+}, [isModalOpen]);
+```
+
+```jsx
+import { useState, useEffect } from "react";
+
+function Modal() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleOverlayClick = (e) => {
+    if (e.target.classList.contains("modal-overlay")) {
+      closeModal();
+    }
+  };
+
+  // Function to handle keydown event
+  const handleKeyDown = (e) => {
+    if (e.key === "Escape") {
+      // Check if the pressed key is "Escape"
+      closeModal(); // Close the modal
+    }
+  };
+
+  // Effect to add/remove the keydown event listener
+  useEffect(() => {
+    if (isModalOpen) {
+      window.addEventListener("keydown", handleKeyDown); // Add listener when modal is open
+    } else {
+      window.removeEventListener("keydown", handleKeyDown); // Remove listener when modal is closed
+    }
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isModalOpen]);
+
+  return (
+    <div>
+      <button onClick={openModal} className="modal-button">
+        Open Modal
+      </button>
+
+      {isModalOpen && (
+        <div
+          className="modal-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-heading"
+          onClick={handleOverlayClick}
+        >
+          <div className="modal-content">
+            <h2 className="modal-heading" id="modal-heading">
+              Modal Heading
+            </h2>
+            <p className="modal-paragraph">
+              This is a sample paragraph inside the modal. You can add any
+              content here.
+            </p>
+            <button onClick={closeModal} className="close-button">
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default Modal;
+```

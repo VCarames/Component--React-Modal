@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function Modal() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -11,13 +11,33 @@ function Modal() {
     setIsModalOpen(false);
   };
 
-  // Function to handle overlay click
   const handleOverlayClick = (e) => {
-    // Close modal only if the overlay is clicked
     if (e.target.classList.contains("modal-overlay")) {
       closeModal();
     }
   };
+
+  // Function to handle keydown event
+  const handleKeyDown = (e) => {
+    if (e.key === "Escape") {
+      // Check if the pressed key is "Escape"
+      closeModal(); // Close the modal
+    }
+  };
+
+  // Effect to add/remove the keydown event listener
+  useEffect(() => {
+    if (isModalOpen) {
+      window.addEventListener("keydown", handleKeyDown); // Add listener when modal is open
+    } else {
+      window.removeEventListener("keydown", handleKeyDown); // Remove listener when modal is closed
+    }
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isModalOpen]);
 
   return (
     <div>
