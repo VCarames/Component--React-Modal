@@ -17,25 +17,24 @@ function Modal() {
     }
   };
 
-  // Function to handle keydown event
   const handleKeyDown = (e) => {
     if (e.key === "Escape") {
-      // Check if the pressed key is "Escape"
-      closeModal(); // Close the modal
+      closeModal();
     }
   };
 
-  // Effect to add/remove the keydown event listener
   useEffect(() => {
     if (isModalOpen) {
-      window.addEventListener("keydown", handleKeyDown); // Add listener when modal is open
+      window.addEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "hidden"; // Disable body scroll when modal is open
     } else {
-      window.removeEventListener("keydown", handleKeyDown); // Remove listener when modal is closed
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = ""; // Re-enable body scroll when modal is closed
     }
 
-    // Clean up the event listener on component unmount
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = ""; // Ensure scroll is re-enabled on cleanup
     };
   }, [isModalOpen]);
 
@@ -51,7 +50,7 @@ function Modal() {
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-heading"
-          onClick={handleOverlayClick} // Close modal on overlay click
+          onClick={handleOverlayClick}
         >
           <div className="modal-content">
             <h2 className="modal-heading" id="modal-heading">
