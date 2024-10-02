@@ -24,17 +24,50 @@ function Modal() {
   };
 
   useEffect(() => {
-    if (isModalOpen) {
-      window.addEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "hidden"; // Disable body scroll when modal is open
-    } else {
-      window.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = ""; // Re-enable body scroll when modal is closed
-    }
+    // If the modal is not open, do not run the following code
+    if (!isModalOpen) return;
+
+    // Select the modal content to manage focus
+    const modal = document.querySelector(".modal-content");
+
+    // Select all focusable elements within the modal
+    const focusableElements =
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
+    const firstFocusableElement = modal.querySelectorAll(focusableElements)[0];
+    const focusableContent = modal.querySelectorAll(focusableElements);
+    const lastFocusableElement = focusableContent[focusableContent.length - 1];
+
+    // Handle focus trapping within the modal
+    const handleFocusTrap = (e) => {
+      if (e.key === "Tab") {
+        if (e.shiftKey) {
+          // If Shift + Tab is pressed and focus is on the first element, loop to last element
+          if (document.activeElement === firstFocusableElement) {
+            e.preventDefault();
+            lastFocusableElement.focus();
+          }
+        } else {
+          // If Tab is pressed and focus is on the last element, loop to first element
+          if (document.activeElement === lastFocusableElement) {
+            e.preventDefault();
+            firstFocusableElement.focus();
+          }
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keydown", handleFocusTrap); // Add event listener for focus trapping
+    document.body.style.overflow = "hidden";
+
+    // Focus the first focusable element when the modal opens
+    firstFocusableElement.focus();
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = ""; // Ensure scroll is re-enabled on cleanup
+      window.removeEventListener("keydown", handleFocusTrap); // Clean up focus trap listener
+      document.body.style.overflow = "";
     };
   }, [isModalOpen]);
 
