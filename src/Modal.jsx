@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 function Modal() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModalButtonRef = useRef(null); // Reference for the button that opens the modal
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -9,6 +10,7 @@ function Modal() {
 
   const closeModal = () => {
     setIsModalOpen(false);
+    openModalButtonRef.current.focus(); // Set focus back to the open modal button
   };
 
   const handleOverlayClick = (e) => {
@@ -24,31 +26,23 @@ function Modal() {
   };
 
   useEffect(() => {
-    // If the modal is not open, do not run the following code
     if (!isModalOpen) return;
 
-    // Select the modal content to manage focus
     const modal = document.querySelector(".modal-content");
-
-    // Select all focusable elements within the modal
     const focusableElements =
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
-
     const firstFocusableElement = modal.querySelectorAll(focusableElements)[0];
     const focusableContent = modal.querySelectorAll(focusableElements);
     const lastFocusableElement = focusableContent[focusableContent.length - 1];
 
-    // Handle focus trapping within the modal
     const handleFocusTrap = (e) => {
       if (e.key === "Tab") {
         if (e.shiftKey) {
-          // If Shift + Tab is pressed and focus is on the first element, loop to last element
           if (document.activeElement === firstFocusableElement) {
             e.preventDefault();
             lastFocusableElement.focus();
           }
         } else {
-          // If Tab is pressed and focus is on the last element, loop to first element
           if (document.activeElement === lastFocusableElement) {
             e.preventDefault();
             firstFocusableElement.focus();
@@ -58,22 +52,25 @@ function Modal() {
     };
 
     window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keydown", handleFocusTrap); // Add event listener for focus trapping
+    window.addEventListener("keydown", handleFocusTrap);
     document.body.style.overflow = "hidden";
 
-    // Focus the first focusable element when the modal opens
     firstFocusableElement.focus();
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keydown", handleFocusTrap); // Clean up focus trap listener
+      window.removeEventListener("keydown", handleFocusTrap);
       document.body.style.overflow = "";
     };
   }, [isModalOpen]);
 
   return (
     <div>
-      <button onClick={openModal} className="modal-button">
+      <button
+        onClick={openModal}
+        className="modal-button"
+        ref={openModalButtonRef} // Attach the ref to the button
+      >
         Open Modal
       </button>
 
