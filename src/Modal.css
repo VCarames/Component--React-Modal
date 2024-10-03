@@ -1,0 +1,169 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+body {
+  line-height: 1.5;
+  text-rendering: optimizeSpeed;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  border: none;
+}
+
+a,
+button {
+  background: none;
+  cursor: pointer;
+
+  @media (hover: hover) {
+    &:is(:hover, :focus, :focus-visible) {
+      transition: 0.8s all;
+    }
+  }
+}
+
+.visually-hidden {
+  border: 0 !important;
+  clip: rect(1px, 1px, 1px, 1px) !important;
+  -webkit-clip-path: inset(50%) !important;
+  clip-path: inset(50%) !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  position: absolute !important;
+  width: 1px !important;
+  white-space: nowrap !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  min-height: 100dvh;
+  display: grid;
+  place-content: center;
+
+  font-family: "Courier New", Courier, monospace;
+
+  background: rgba(228, 228, 228, 0.8);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.modal-content {
+  display: grid;
+  justify-content: center;
+  gap: 1rem;
+
+  text-align: center;
+
+  padding: 1.25rem;
+  border-radius: 0.5rem;
+  background: white;
+  box-shadow: 0 0.13rem 0.63rem rgba(0, 0, 0, 0.2);
+}
+
+.modal-heading {
+  text-transform: uppercase;
+}
+
+.modal-paragraph {
+  max-width: 40ch;
+}
+
+.modal-button,
+.close-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: 700;
+
+  padding: 1rem 2rem;
+
+  border: solid 0.13rem #fff;
+  border-radius: 0.25rem;
+
+  background: #fff;
+
+  @media (hover: hover) {
+    &:is(:hover, :focus, :focus-visible) {
+      color: #fff;
+      outline: solid 0.13rem #000000;
+      outline-offset: 4px;
+
+      background: #000000;
+    }
+  }
+}
+
+.close-button {
+  border: solid 0.13rem #000;
+}
